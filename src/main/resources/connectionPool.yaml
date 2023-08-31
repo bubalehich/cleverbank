@@ -1,0 +1,9 @@
+database: cleverbank-database
+password: P@55w0rd
+useUnicode: 'true'
+createDatabaseIfNotExist: 'true'
+characterEncoding: UTF-8
+autoReconnect: 'true'
+user: postgres
+url: jdbc:postgresql://localhost:5432/
+useSSL: 'false'
