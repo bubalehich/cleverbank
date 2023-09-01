@@ -1,6 +1,7 @@
 package com.vlasova.cleverbank.entity.accounte;
 
 import com.vlasova.cleverbank.entity.Bank;
+import com.vlasova.cleverbank.entity.Currency;
 import com.vlasova.cleverbank.entity.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
