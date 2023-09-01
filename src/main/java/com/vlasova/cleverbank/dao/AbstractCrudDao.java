@@ -42,7 +42,7 @@ public abstract class AbstractCrudDao<Entity> extends AbstractDao<Entity> {
 
     public Optional<Entity> findById(Long id) throws SQLException {
         try (Connection connection = pool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(findAllQuery)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(findByIdQuery)) {
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 return resultSet.next()

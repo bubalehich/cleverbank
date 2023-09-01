@@ -19,7 +19,7 @@ public class BankDao extends AbstractCrudDao<Bank> implements DaoInterface<Long,
     private static final String UPDATE = "UPDATE banks SET bic_number = ?, bic_number = ?, name = ? WHERE id = ?";
     protected String findByIdQuery = "select * FROM banks WHERE id = ?";
     protected String deleteByIdQuery = "DELETE FROM banks WHERE id = ?";
-    protected String findAllQuery = "SELECT * FROM card ORDER BY id LIMIT ? OFFSET ?";
+    protected String findAllQuery = "SELECT * FROM banks ORDER BY id LIMIT ? OFFSET ?";
 
     @Override
     public Optional<Bank> save(Bank bank) throws SQLException {

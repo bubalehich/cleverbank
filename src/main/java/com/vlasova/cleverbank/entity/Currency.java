@@ -1,4 +1,4 @@
-package com.vlasova.cleverbank.entity.accounte;
+package com.vlasova.cleverbank.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

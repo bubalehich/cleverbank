@@ -1,4 +1,4 @@
-package com.vlasova.cleverbank.dao.impl;
+package com.vlasova.cleverbank.dao.impl.account;
 
 import com.vlasova.cleverbank.dao.AbstractCrudDao;
 import com.vlasova.cleverbank.dao.DaoInterface;
@@ -23,6 +23,7 @@ public class AccountDao extends AbstractCrudDao<Account> implements DaoInterface
 
     @Override
     public Optional<Account> save(Account account) throws SQLException {
+        //TODO change return type to entity
         try (Connection connection = pool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE, RETURN_GENERATED_KEYS)) {
             preparedStatement.setBigDecimal(1, account.getBalance());
