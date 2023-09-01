@@ -1,5 +1,7 @@
 package com.vlasova.cleverbank.dao;
 
+import com.vlasova.cleverbank.exception.DataAccessException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +16,7 @@ public abstract class AbstractCrudDao<Entity> extends AbstractDao<Entity> {
     protected String deleteByIdQuery;
     protected String findByIdQuery;
 
-    public Collection<Entity> findAll(Integer pageNumber, Integer pageSize) throws SQLException {
+    public Collection<Entity> findAll(Integer pageNumber, Integer pageSize) throws DataAccessException {
         List<Entity> items = new ArrayList<>();
 
         try (Connection connection = pool.getConnection();
@@ -26,21 +28,25 @@ public abstract class AbstractCrudDao<Entity> extends AbstractDao<Entity> {
                     items.add(mapFromResultSet(resultSet));
                 }
             }
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
 
         return items;
     }
 
-    public boolean delete(Long id) throws SQLException {
+    public boolean delete(Long id) throws DataAccessException {
         try (Connection connection = pool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(deleteByIdQuery)) {
             preparedStatement.setLong(1, id);
 
             return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
     }
 
-    public Optional<Entity> findById(Long id) throws SQLException {
+    public Optional<Entity> findById(Long id) throws DataAccessException {
         try (Connection connection = pool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(findByIdQuery)) {
             preparedStatement.setLong(1, id);
@@ -49,6 +55,16 @@ public abstract class AbstractCrudDao<Entity> extends AbstractDao<Entity> {
                         ? Optional.of(mapFromResultSet(resultSet))
                         : Optional.empty();
             }
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
+    }
+
+    public boolean update(Entity entity) throws DataAccessException {
+        throw new UnsupportedOperationException("The requested operation is not supported");
+    }
+
+    public Optional<Entity> save(Entity entity) throws DataAccessException {
+        throw new UnsupportedOperationException("The requested operation is not supported");
     }
 }

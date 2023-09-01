@@ -3,6 +3,8 @@ package com.vlasova.cleverbank.dao.impl.transaction;
 import com.vlasova.cleverbank.dao.AbstractCrudDao;
 import com.vlasova.cleverbank.dao.DaoInterface;
 import com.vlasova.cleverbank.entity.transaction.Transaction;
+import com.vlasova.cleverbank.exception.DataAccessException;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
+@ApplicationScoped
 public class TransactionDao extends AbstractCrudDao<Transaction> implements DaoInterface<Long, Transaction> {
     private static final String SAVE = "INSERT INTO transactions (amount, date, receiver_id, sender_id, type_id, number, payload) VALUES (?,?,?,?,?,?,?)";
     protected String findByIdQuery = "SELECT * FROM transactions WHERE id = ?";
@@ -20,12 +23,7 @@ public class TransactionDao extends AbstractCrudDao<Transaction> implements DaoI
     protected String findAllQuery = "SELECT * FROM transactions ORDER BY id LIMIT ? OFFSET ?";
 
     @Override
-    protected Transaction mapFromResultSet(ResultSet resultSet) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Optional<Transaction> save(Transaction transaction) throws SQLException {
+    public Optional<Transaction> save(Transaction transaction) throws DataAccessException {
         try (Connection connection = pool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE, RETURN_GENERATED_KEYS)) {
             preparedStatement.setBigDecimal(1, transaction.getAmount());
@@ -35,20 +33,21 @@ public class TransactionDao extends AbstractCrudDao<Transaction> implements DaoI
             preparedStatement.setLong(5, transaction.getTransactionType().getId());
             preparedStatement.setString(6, transaction.getNumber().toString());
             preparedStatement.setString(7, transaction.getPayload());
-            //TODO check parameter indexes
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
 
             if (resultSet.next()) {
                 transaction.setId((long) resultSet.getInt(1));
             }
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
 
         return Optional.of(transaction);
     }
 
     @Override
-    public boolean update(Transaction transaction) throws SQLException {
-        throw new UnsupportedOperationException("This operation does not supports!");
+    protected Transaction mapFromResultSet(ResultSet resultSet) {
+        return null;
     }
 }
