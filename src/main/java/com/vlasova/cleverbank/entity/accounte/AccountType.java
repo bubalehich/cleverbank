@@ -21,14 +21,11 @@ public class AccountType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccountType that = (AccountType) o;
-        return new EqualsBuilder().append(id, that.id).append(name, that.name).isEquals();
+        return new EqualsBuilder().append(name, that.name).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .toHashCode();
+        return new HashCodeBuilder(17, 37).append(name).toHashCode();
     }
 }

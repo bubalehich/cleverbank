@@ -70,7 +70,7 @@ public class AccountDao extends AbstractCrudDao<Account> implements DaoInterface
             Account account = new Account();
             account.setBalance(resultSet.getBigDecimal("balance"));
             account.setActive(resultSet.getBoolean("is_active"));
-            account.setOpeningDate(Instant.from(resultSet.getDate("description").toInstant()));
+            account.setOpeningDate(Instant.from(resultSet.getDate("opening_date").toInstant()));
             account.setNumber(resultSet.getString("number"));
             account.setId(resultSet.getLong("id"));
 
