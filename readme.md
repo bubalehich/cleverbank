@@ -1,12 +1,17 @@
- # Tech stack: 
- 
-  - Java 17
-  - Jakarta EE 10
-  - Gradle
-  - Postgresql 42v
-  - Lombok
-  - JDBC
+# Tech stack:
 
- # Other
-- Endpoints can be found [Here](src%2Fmain%2Fresources%2Fhttp%2Fbank-operations.http) (made with servlets)
+- Java 17
+- Jakarta EE 10
+- Gradle
+- Postgresql 42v
+- Lombok
+- JDBC
+
+# Entrypoints:
+
+- [Refill, Withdrawals, Transfer](src%2Fmain%2Fresources%2Fhttp%2Fbank-operations.http)
+- [Bank api](src%2Fmain%2Fresources%2Fhttp%2Fbank-api.http)
+
+# Other
+
 - Database data & structure can be found [here](database)

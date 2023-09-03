@@ -1,0 +1,32 @@
+### get bank by id
+GET http://localhost:8080/api/banks/1
+Content-Type: application/json
+
+
+### get all banks with pagination
+GET http://localhost:8080/api/banks?offset=1&limit=10
+Content-Type: application/json
+
+### create bank
+POST http://localhost:8080/api/banks
+Content-Type: application/json
+
+{
+    "bicNumber": "GF456",
+    "country": "Russia",
+    "name": "Alfa"
+}
+
+### withdraw money from the account
+PUT http://localhost:8080/api/banks/1
+Content-Type: application/json
+
+{
+    "bicNumber": "GF456",
+    "country": "Russia",
+    "name": "Alfa"
+}
+
+### withdraw money from the account
+DELETE http://localhost:8080/api/banks/1
+Content-Type: application/json
