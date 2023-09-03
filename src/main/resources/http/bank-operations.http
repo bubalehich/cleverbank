@@ -1,0 +1,34 @@
+### refill bank account
+POST http://localhost:8080/api/refill
+Content-Type: application/json
+
+{
+    "amount": "100",
+    "accountNumber": "1234566789",
+    "currency": "BYN",
+    "bankNumber": "123456789"
+}
+
+### withdraw money from the account
+POST http://localhost:8080/api/withdrawals
+Content-Type: application/json
+
+{
+    "amount": "100",
+    "accountNumber": "1234566789",
+    "currency": "BYN",
+    "bankNumber": "123456789"
+}
+### transfer money to another account
+POST http://localhost:8080/api/transfer
+Content-Type: application/json
+
+{
+    "amount": "100",
+    "accountReceiver": "1234566789",
+    "accountSender": "1234566789",
+    "currency": "BYN",
+    "bankReceiver": "123456789",
+    "bankSender": "123456789",
+    "payload" : "buy beer"
+}
