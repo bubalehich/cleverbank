@@ -46,6 +46,18 @@ public class Account {
         return id == 0;
     }
 
+    public boolean isTransactionCanBeStarted() {
+        return isActive && !isLocked;
+    }
+
+    public void withdrawMoney(BigDecimal amount) {
+        this.balance = balance.subtract(amount);
+    }
+
+    public void addMoney(BigDecimal amount) {
+        this.balance = balance.add(amount);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

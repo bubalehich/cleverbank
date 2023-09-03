@@ -1,10 +1,10 @@
 package com.vlasova.cleverbank.servlet.operations;
 
 import com.vlasova.cleverbank.exception.ValidationException;
-import com.vlasova.cleverbank.service.WithdrawalsService;
+import com.vlasova.cleverbank.service.operation.WithdrawalsService;
+import com.vlasova.cleverbank.servlet.AbstractGsonServlet;
 import com.vlasova.cleverbank.servlet.dto.ErrorResponse;
 import com.vlasova.cleverbank.servlet.dto.WithdrawalsRequestDto;
-import com.vlasova.cleverbank.servlet.dto.WithdrawalsResponse;
 import com.vlasova.cleverbank.validator.WithdrawalsRequestValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ public class WithdrawalsServlet extends AbstractGsonServlet {
 
             WithdrawalsRequestValidator.validate(withdrawalsRequest);
 
-            WithdrawalsResponse withdrawalsResponse = service.doWithdrawalsOperation(withdrawalsRequest);
+            var withdrawalsResponse = service.doWithdrawalsOperation(withdrawalsRequest);
             printWriter.println(converter.toJson(withdrawalsResponse));
         } catch (ValidationException e) {
             response.getWriter()

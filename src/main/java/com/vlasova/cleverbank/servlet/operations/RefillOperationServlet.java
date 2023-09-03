@@ -1,10 +1,10 @@
 package com.vlasova.cleverbank.servlet.operations;
 
 import com.vlasova.cleverbank.exception.ValidationException;
-import com.vlasova.cleverbank.service.RefillService;
+import com.vlasova.cleverbank.service.operation.RefillService;
+import com.vlasova.cleverbank.servlet.AbstractGsonServlet;
 import com.vlasova.cleverbank.servlet.dto.ErrorResponse;
 import com.vlasova.cleverbank.servlet.dto.RefillRequestDto;
-import com.vlasova.cleverbank.servlet.dto.RefillResponse;
 import com.vlasova.cleverbank.validator.RefillRequestValidator;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ public class RefillOperationServlet extends AbstractGsonServlet {
 
             RefillRequestValidator.validate(refillRequest);
 
-            RefillResponse refillResponse = service.doRefillOperation(refillRequest);
+            var refillResponse = service.doRefillOperation(refillRequest);
             printWriter.println(converter.toJson(refillResponse));
         } catch (ValidationException e) {
             response.getWriter()

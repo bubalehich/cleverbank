@@ -1,10 +1,15 @@
-package com.vlasova.cleverbank.service;
+package com.vlasova.cleverbank.service.operation;
 
 import com.vlasova.cleverbank.entity.accounte.Account;
 import com.vlasova.cleverbank.entity.transaction.Transaction;
 import com.vlasova.cleverbank.exception.TransactionExecutionException;
-import com.vlasova.cleverbank.servlet.dto.WithdrawalsRequestDto;
-import com.vlasova.cleverbank.servlet.dto.WithdrawalsResponse;
+import com.vlasova.cleverbank.service.AccountService;
+import com.vlasova.cleverbank.service.BankService;
+import com.vlasova.cleverbank.service.CurrencyService;
+import com.vlasova.cleverbank.service.TransactionService;
+import com.vlasova.cleverbank.service.TransactionTypeService;
+import com.vlasova.cleverbank.servlet.dto.RefillRequestDto;
+import com.vlasova.cleverbank.servlet.dto.RefillResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 
@@ -14,50 +19,51 @@ import java.util.UUID;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class WithdrawalsService {
-    private static final String OPERATION_TYPE = "Withdrawals";
+public class RefillService extends AbstractLockAccountService {
+    private static final String OPERATION_TYPE = "Refill";
+
     private final BankService bankService;
     private final AccountService accountService;
     private final CurrencyService currencyService;
-    private final TransactionService transactionService;
     private final TransactionTypeService transactionTypeService;
+    private final TransactionService transactionService;
 
-    public WithdrawalsResponse doWithdrawalsOperation(WithdrawalsRequestDto withdrawalsRequest) {
-        var account = accountService.getById(Long.parseLong(withdrawalsRequest.getAccountNumber()));
-        var bank = bankService.getById(Long.parseLong(withdrawalsRequest.getBankNumber()));
-        var currency = currencyService.getById(Long.parseLong(withdrawalsRequest.getCurrency()));
+    public RefillResponse doRefillOperation(RefillRequestDto refillRequest) {
+        var bank = bankService.getById(Long.parseLong(refillRequest.getBankNumber()));
+        var account = accountService.getById(Long.parseLong(refillRequest.getAccountNumber()));
+        var currency = currencyService.getById(Long.parseLong(refillRequest.getCurrency()));
+        var amount = BigDecimal.valueOf(Double.parseDouble(refillRequest.getAmount()));
         var transactionType = transactionTypeService.getByName(OPERATION_TYPE);
-        var amount = BigDecimal.valueOf(Double.parseDouble(withdrawalsRequest.getAmount()));
 
         Account backup = null;
         boolean isTransactionStarted = false;
         try {
-            if (account.isActive()) {
+            if (!account.isLocked() && account.isActive() && account.getCurrency().equals(currency) && lockAccountForOperation(account.getId())) {
                 backup = account.copy();
+                isTransactionStarted = true;
 
-                account.setBalance(account.getBalance().add(amount));
+                if (account.getBalance().compareTo(amount) <= 0) {
+                    throw new TransactionExecutionException("Not enough money, my lord!:<");
+                }
+                account.setBalance(account.getBalance().subtract(amount));
                 Transaction transaction = new Transaction();
+                transaction.setAmount(amount);
                 transaction.setDate(Instant.now());
                 transaction.setReceiver(account);
                 transaction.setTransactionType(transactionType);
-                transaction.setAmount(amount);
                 transaction.setNumber(UUID.randomUUID());
-                transaction.setPayload(withdrawalsRequest.getPayload());
-                transaction.setCurrency(currency);
                 transaction.setSender(account);
 
                 accountService.save(account);
                 transactionService.save(transaction);
 
-                return new WithdrawalsResponse(
+                return new RefillResponse(
                         transaction.getNumber().toString(),
                         transaction.getAmount(),
                         transaction.getCurrency().getHandle(),
                         bank.getName(),
-                        account.getNumber(),
-                        transaction.getDate().toString(),
-                        transaction.getPayload(),
-                        account.getBalance().toString()
+                        transaction.getReceiver().getNumber(),
+                        transaction.getDate().toString()
                 );
             }
             throw new TransactionExecutionException("The account is not available. Try later or call the helpdesk.");
@@ -66,6 +72,8 @@ public class WithdrawalsService {
                 accountService.save(backup);
             }
             throw new TransactionExecutionException(e);
+        } finally {
+            unlockAccountAfterOperation(account.getId());
         }
     }
 }
