@@ -1,6 +1,7 @@
 package com.vlasova.cleverbank.dao;
 
 import com.vlasova.cleverbank.pool.ConnectionPool;
+import jakarta.inject.Inject;
 
 import java.sql.ResultSet;
 

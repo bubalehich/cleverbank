@@ -64,7 +64,7 @@ public abstract class AbstractCrudDao<Entity> extends AbstractDao<Entity> {
         throw new UnsupportedOperationException("The requested operation is not supported");
     }
 
-    public Optional<Entity> save(Entity entity) throws DataAccessException {
+    public Entity save(Entity entity) throws DataAccessException {
         throw new UnsupportedOperationException("The requested operation is not supported");
     }
 }

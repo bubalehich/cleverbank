@@ -42,6 +42,10 @@ public class Account {
         return new Account(id, customer, number, openingDate, bank, balance, type, currency, isActive, isLocked);
     }
 
+    public boolean isNew() {
+        return id == 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

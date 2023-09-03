@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -24,7 +23,7 @@ public class CustomerDao extends AbstractCrudDao<Customer> implements DaoInterfa
     protected String findAllQuery = "SELECT * FROM customers ORDER BY id LIMIT ? OFFSET ?";
 
     @Override
-    public Optional<Customer> save(Customer customer) throws DataAccessException {
+    public Customer save(Customer customer) throws DataAccessException {
         try (Connection connection = pool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE, RETURN_GENERATED_KEYS)) {
             preparedStatement.setBoolean(1, customer.isActive());
@@ -37,7 +36,7 @@ public class CustomerDao extends AbstractCrudDao<Customer> implements DaoInterfa
             if (resultSet.next()) {
                 customer.setId((long) resultSet.getInt(1));
             }
-            return Optional.of(customer);
+            return customer;
         } catch (SQLException e) {
             throw new DataAccessException(e);
         }

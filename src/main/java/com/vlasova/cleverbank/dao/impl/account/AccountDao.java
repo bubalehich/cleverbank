@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -26,8 +25,7 @@ public class AccountDao extends AbstractCrudDao<Account> implements DaoInterface
     protected String findAllQuery = "SELECT * FROM accounts ORDER BY id LIMIT ? OFFSET ?";
 
     @Override
-    public Optional<Account> save(Account account) throws DataAccessException {
-        //TODO change return type to entity
+    public Account save(Account account) throws DataAccessException {
         try (Connection connection = pool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE, RETURN_GENERATED_KEYS)) {
             preparedStatement.setBigDecimal(1, account.getBalance());
@@ -45,7 +43,7 @@ public class AccountDao extends AbstractCrudDao<Account> implements DaoInterface
             if (resultSet.next()) {
                 account.setId((long) resultSet.getInt(1));
             }
-            return Optional.of(account);
+            return account;
         } catch (SQLException e) {
             throw new DataAccessException(e);
         }

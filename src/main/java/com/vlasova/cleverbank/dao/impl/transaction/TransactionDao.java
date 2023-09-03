@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -26,7 +25,7 @@ public class TransactionDao extends AbstractCrudDao<Transaction> implements DaoI
     protected String findAllQuery = "SELECT * FROM transactions ORDER BY id LIMIT ? OFFSET ?";
 
     @Override
-    public Optional<Transaction> save(Transaction transaction) throws DataAccessException {
+    public Transaction save(Transaction transaction) throws DataAccessException {
         try (Connection connection = pool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE, RETURN_GENERATED_KEYS)) {
             preparedStatement.setBigDecimal(1, transaction.getAmount());
@@ -47,7 +46,7 @@ public class TransactionDao extends AbstractCrudDao<Transaction> implements DaoI
             throw new DataAccessException(e);
         }
 
-        return Optional.of(transaction);
+        return transaction;
     }
 
     @Override

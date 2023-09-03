@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface DaoInterface<Id, Entity> {
-    Optional<Entity> save(Entity type) throws DataAccessException;
+    Entity save(Entity type) throws DataAccessException;
 
     boolean update(Entity entity) throws DataAccessException;
 

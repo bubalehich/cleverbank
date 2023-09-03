@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -24,7 +23,7 @@ public class BankDao extends AbstractCrudDao<Bank> implements DaoInterface<Long,
     protected String findAllQuery = "SELECT * FROM banks ORDER BY id LIMIT ? OFFSET ?";
 
     @Override
-    public Optional<Bank> save(Bank bank) throws DataAccessException {
+    public Bank save(Bank bank) throws DataAccessException {
         try (Connection connection = pool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE, RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, bank.getBicNumber());
@@ -37,7 +36,7 @@ public class BankDao extends AbstractCrudDao<Bank> implements DaoInterface<Long,
             if (resultSet.next()) {
                 bank.setId((long) resultSet.getInt(1));
             }
-            return Optional.of(bank);
+            return bank;
         } catch (SQLException e) {
             throw new DataAccessException(e);
         }
