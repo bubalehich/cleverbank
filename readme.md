@@ -11,6 +11,7 @@
 
 - [Refill, Withdrawals, Transfer](src%2Fmain%2Fresources%2Fhttp%2Fbank-operations.http)
 - [Bank api](src%2Fmain%2Fresources%2Fhttp%2Fbank-api.http)
+- [Account api](src%2Fmain%2Fresources%2Fhttp%2Faccount-api.http)
 
 # Other
 
