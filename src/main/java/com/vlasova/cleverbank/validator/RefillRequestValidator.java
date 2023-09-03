@@ -2,9 +2,12 @@ package com.vlasova.cleverbank.validator;
 
 import com.vlasova.cleverbank.exception.ValidationException;
 import com.vlasova.cleverbank.servlet.dto.RefillRequestDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RefillRequestValidator {
     public static void validate(RefillRequestDto dto) {
         try {

@@ -5,31 +5,34 @@ import com.vlasova.cleverbank.entity.transaction.Transaction;
 import com.vlasova.cleverbank.exception.TransactionExecutionException;
 import com.vlasova.cleverbank.servlet.dto.RefillRequestDto;
 import com.vlasova.cleverbank.servlet.dto.RefillResponse;
+import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
+@ApplicationScoped
 @RequiredArgsConstructor
 public class RefillService {
+    private static final String OPERATION_TYPE = "Refill";
     private final BankService bankService;
     private final AccountService accountService;
     private final CurrencyService currencyService;
-
     private final TransactionTypeService transactionTypeService;
+    private final TransactionService transactionService;
 
     public RefillResponse doRefillOperation(RefillRequestDto refillRequest) {
         var bank = bankService.getById(Long.parseLong(refillRequest.getBankNumber()));
         var account = accountService.getById(Long.parseLong(refillRequest.getAccountNumber()));
         var currency = currencyService.getById(Long.parseLong(refillRequest.getCurrency()));
         var amount = BigDecimal.valueOf(Double.parseDouble(refillRequest.getAmount()));
-        var transactionType = transactionTypeService.getByName("Refill");
+        var transactionType = transactionTypeService.getByName(OPERATION_TYPE);
 
-        RefillResponse response = new RefillResponse();
         Account backup = null;
         boolean isTransactionStarted = false;
         try {
-            if (account.getCurrency().equals(currency) && lockAccountForOperation(account.getId())) {
+            if (!account.isLocked() && account.isActive() && account.getCurrency().equals(currency) && lockAccountForOperation(account.getId())) {
                 backup = account.copy();
                 isTransactionStarted = true;
 
@@ -42,16 +45,23 @@ public class RefillService {
                 transaction.setDate(Instant.now());
                 transaction.setReceiver(account);
                 transaction.setTransactionType(transactionType);
+                transaction.setNumber(UUID.randomUUID());
+                transaction.setSender(account);
 
-                response = new RefillResponse(
+                accountService.save(account);
+                transactionService.save(transaction);
+
+                return new RefillResponse(
                         transaction.getNumber().toString(),
                         transaction.getAmount(),
                         transaction.getCurrency().getHandle(),
-                        transaction.getReceiver().getBank().getName(),
+                        bank.getName(),
                         transaction.getReceiver().getNumber(),
                         transaction.getDate().toString()
                 );
             }
+            throw new TransactionExecutionException("The account is not available. Try later or call the helpdesk.");
+
         } catch (Exception e) {
             if (isTransactionStarted && backup != null) {
                 accountService.save(backup);
@@ -60,8 +70,6 @@ public class RefillService {
         } finally {
             unlockAccountAfterOperation(account.getId());
         }
-
-        return response;
     }
 
 

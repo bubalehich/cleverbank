@@ -6,6 +6,7 @@ import com.vlasova.cleverbank.entity.transaction.Transaction;
 import com.vlasova.cleverbank.exception.DataAccessException;
 import com.vlasova.cleverbank.exception.MappingException;
 import jakarta.enterprise.context.ApplicationScoped;
+import lombok.RequiredArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
+@RequiredArgsConstructor
 @ApplicationScoped
 public class TransactionDao extends AbstractCrudDao<Transaction> implements DaoInterface<Long, Transaction> {
     private static final String SAVE = "INSERT INTO transactions (amount, date, receiver_id, sender_id, type_id, number, payload, currency_id) VALUES (?,?,?,?,?,?,?)";

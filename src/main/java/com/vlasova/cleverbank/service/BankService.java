@@ -4,12 +4,12 @@ package com.vlasova.cleverbank.service;
 import com.vlasova.cleverbank.dao.impl.BankDao;
 import com.vlasova.cleverbank.entity.Bank;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 @ApplicationScoped
+@RequiredArgsConstructor
 public class BankService {
-    @Inject
     private BankDao bankDao;
 
     public Bank getById(long id) {
