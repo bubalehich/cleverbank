@@ -17,7 +17,7 @@ Content-Type: application/json
     "name": "Alfa"
 }
 
-### withdraw money from the account
+### update bank
 PUT http://localhost:8080/api/banks/1
 Content-Type: application/json
 
@@ -27,6 +27,6 @@ Content-Type: application/json
     "name": "Alfa"
 }
 
-### withdraw money from the account
+### delete bank
 DELETE http://localhost:8080/api/banks/1
 Content-Type: application/json
