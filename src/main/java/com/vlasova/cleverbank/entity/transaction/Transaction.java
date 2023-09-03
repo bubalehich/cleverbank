@@ -1,5 +1,6 @@
 package com.vlasova.cleverbank.entity.transaction;
 
+import com.vlasova.cleverbank.entity.Currency;
 import com.vlasova.cleverbank.entity.accounte.Account;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,33 +19,27 @@ import java.util.UUID;
 @Setter
 public class Transaction {
     private long id;
-
     private UUID number;
-
     private Instant date = Instant.now();
-
     private BigDecimal amount;
-
     private Account sender;
-
     private Account receiver;
-
     private TransactionType transactionType;
     private String payload;
+    private Currency currency;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         Transaction that = (Transaction) o;
-
-        return new EqualsBuilder().append(id, that.id).append(number, that.number).isEquals();
+        return new EqualsBuilder()
+                .append(id, that.id).append(number, that.number).append(date, that.date).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(number).toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(id).append(number).append(date).toHashCode();
     }
 }
