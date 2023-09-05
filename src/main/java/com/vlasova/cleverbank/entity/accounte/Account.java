@@ -39,7 +39,17 @@ public class Account {
     private boolean isLocked;
 
     public Account copy() {
-        return new Account(id, customer, number, openingDate, bank, balance, type, currency, isActive, isLocked);
+        return new Account(
+                id,
+                customer,
+                number,
+                openingDate,
+                bank,
+                BigDecimal.valueOf(balance.doubleValue()),
+                type,
+                currency,
+                isActive,
+                isLocked);
     }
 
     public boolean isNew() {
